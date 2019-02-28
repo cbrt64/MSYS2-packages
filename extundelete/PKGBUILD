@@ -1,0 +1,36 @@
+# Contributor: Edward E. <develinthedetail@gmail.com>
+
+pkgname=extundelete
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="Utility for recovering deleted files from ext2, ext3 or ext4 partitions by parsing the journal"
+arch=('i686' 'x86_64')
+license=("GPL")
+url="http://extundelete.sourceforge.net"
+depends=('e2fsprogs')
+options=('strip')
+source=("https://downloads.sourceforge.net/project/extundelete/extundelete/$pkgver/$pkgname-$pkgver.tar.bz2"
+        "extundelete-e2fsprogs-1.44.1.patch")
+sha256sums=('a1f9dd61247056d36401ce5d6785e74d08a184340eebd3865c345ddaa93f19f4'
+            '944a1dc5a0697334fa27eabc198a6b230740199a01d3a942c01570edb996426f')
+
+prepare() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch -p1 -i ${srcdir}/extundelete-e2fsprogs-1.44.1.patch # Fix build with e2fsprogs 1.44.1
+}
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-shared
+
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}${MINGW_PREFIX}/share/licenses/${pkgname}/LICENSE"
+}
