@@ -1,0 +1,33 @@
+# Contributor: Edward E. <develinthedetail@gmail.com>
+
+pkgname=expac
+pkgver=9
+pkgrel=1
+pkgdesc="pacman database extraction utility"
+depends=('pacman')
+makedepends=('perl' 'libarchive-devel' 'libcurl-devel' 'libgpgme-devel')
+url='https://github.com/falconindy/expac'
+license=('GPL')
+arch=('i686' 'x86_64')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/falconindy/${pkgname}/archive/${pkgver}.tar.gz")
+sha256sums=('5ed090c31ccc761cd7555683c6e08183c48e5e89a628ec95f2db2d161d7ceaea')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  sed '/\*\//q' expac.c >LICENSE
+}
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make LDLIBS='-lalpm -larchive -lcrypto -lcurl -lgpgme -lintl'
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make PREFIX=/usr DESTDIR="${pkgdir}" install
+
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
