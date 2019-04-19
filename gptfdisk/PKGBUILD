@@ -1,0 +1,35 @@
+# Maintainer: 
+
+pkgname=gptfdisk
+pkgver=1.0.4
+pkgrel=1
+pkgdesc="GPT disk utilities"
+arch=('i686' 'x86_64')
+url="https://www.rodsbooks.com/gdisk/"
+license=("GPL")
+#makedepends=("gcc")
+#depends=("gcc-libs")
+#options=('staticlibs' 'strip')
+source=("https://prdownloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('b663391a6876f19a3cd901d862423a16e2b5ceaa2f4a3b9bb681e64b9c7ba78d')
+
+_ctags_srcdir=${_realname}-${pkgver}
+
+prepare() {
+  cd ${_ctags_srcdir}
+  patch -p1 -i ${srcdir}/001-fix-unused-attribute.patch
+}
+
+build() {
+  cd ${_ctags_srcdir}
+  make -f mk_mingw.mak
+}
+
+package() {
+  _root_dest="${pkgdir}/${MINGW_PREFIX}"
+  mkdir -p "${_root_dest}/bin"
+  cp "${_ctags_srcdir}/ctags.exe" "${_root_dest}/bin"
+  _man_dest="${_root_dest}/share/man/man1"
+  mkdir -p "${_man_dest}"
+  cp "${_ctags_srcdir}/ctags.1" "${_man_dest}"
+}
