@@ -1,0 +1,12 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -60,6 +60,9 @@ AM_GNU_GETTEXT([external])
+ AS_IF([[test -d "$srcdir"/.git]], [[VCS=y]], [[VCS=n]])
+ AC_SUBST([VCS])
+ 
++AC_SEARCH_LIBS(argp_error, argp)
++AC_SEARCH_LIBS(libintl_gettext, libintl)
++
+ 
+ 
+ 

@@ -1,0 +1,32 @@
+# Contributor: Edward E. <develinthedetail@gmail.com>
+
+pkgname=ccd2cue
+pkgver=0.5
+pkgrel=1
+pkgdesc="Convert CloneCD cuesheets (.ccd) to CDRWIN cuesheets (.cue)"
+arch=('i686' 'x86_64')
+url="https://www.gnu.org/software/ccd2cue/"
+license=('GPL3')
+depends=('libargp')
+makedepends=('gettext-devel' 'libargp-devel')
+source=(https://ftpmirror.gnu.org/${pkgname}/${pkgname}-${pkgver}.tar.gz
+        001-fix-libs.patch)
+sha256sums=('8725cfdbcb963259ff094a878aa0e49ea8284e1071ea36ac7ea47358c49b99c5'
+            '5078cfd52285ba98d7f9cda4039db5362c05107440111166784cbea79999c266')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -p1 -i ${srcdir}/001-fix-libs.patch
+  autoreconf -fiv
+}
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR=${pkgdir} install
+}
