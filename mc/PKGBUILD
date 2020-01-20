@@ -17,6 +17,7 @@ optdepends=('gawk: hp48+ extfs'
             #'unace: uace extfs'
             #'unarj: uarj extfs'
             'unrar: urar extfs'
+            'unzip: uzip extfs'
             'zip: uzip extfs'
             'p7zip: support for 7zip archives')
 options=('!emptydirs' '!makeflags')
